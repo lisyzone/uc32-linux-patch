@@ -1,16 +1,14 @@
-diff --git a/arch/unicore32/configs/qemu_defconfig b/arch/unicore32/configs/qemu_defconfig
-index 9d9ff27..0d33e4f 100644
---- a/arch/unicore32/configs/qemu_defconfig
-+++ b/arch/unicore32/configs/qemu_defconfig
-@@ -2,7 +2,7 @@
- CONFIG_LOCALVERSION="-qemu"
- #	Initial RAM filesystem and RAM disk (initramfs/initrd) support
- CONFIG_BLK_DEV_INITRD=y
--CONFIG_INITRAMFS_SOURCE="~/unicore32/initramfs/initramfs_config"
-+CONFIG_INITRAMFS_SOURCE="~/unicore32/initramfs/initramfs_config.busybox"
- 
- ### System Type
- CONFIG_ARCH_PUV3=y
+From b7a2d203237223cb96cd8b103149481e85f01612 Mon Sep 17 00:00:00 2001
+From: Liu Ziyu <siryu0917@pku.edu.cn>
+Date: Tue, 20 Dec 2016 16:29:28 +0800
+Subject: [PATCH] our modification
+
+---
+ arch/unicore32/include/uapi/asm/sigcontext.h | 47 +++++++++++++++++++++++++++-
+ arch/unicore32/kernel/ocd_console.c          |  2 +-
+ mm/percpu.c                                  |  2 +-
+ 3 files changed, 48 insertions(+), 3 deletions(-)
+
 diff --git a/arch/unicore32/include/uapi/asm/sigcontext.h b/arch/unicore32/include/uapi/asm/sigcontext.h
 index 6a2d767..82cdcfa 100644
 --- a/arch/unicore32/include/uapi/asm/sigcontext.h
@@ -75,7 +73,7 @@ index 6a2d767..82cdcfa 100644
 +#endif /* CONFIG_UNICORE32_OLDABI */
  #endif
 diff --git a/arch/unicore32/kernel/ocd_console.c b/arch/unicore32/kernel/ocd_console.c
-index 9d83c74..ed81508 100644
+index 9d83c74..fb4a7ed 100644
 --- a/arch/unicore32/kernel/ocd_console.c
 +++ b/arch/unicore32/kernel/ocd_console.c
 @@ -85,7 +85,7 @@ const struct consw ocd_con = {
@@ -83,7 +81,23 @@ index 9d83c74..ed81508 100644
      .con_cursor =	DUMMY,
      .con_scroll =	ocd_con_scroll,
 -    .con_bmove =	DUMMY,
-+  //.con_bmove =	DUMMY,
++//  .con_bmove =	DUMMY,
      .con_switch =	DUMMY,
      .con_blank =	DUMMY,
      .con_font_set =	DUMMY,
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 9903830..7132433 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -274,7 +274,7 @@ static void __maybe_unused pcpu_next_pop(struct pcpu_chunk *chunk,
+  */
+ #define pcpu_for_each_unpop_region(chunk, rs, re, start, end)		    \
+ 	for ((rs) = (start), pcpu_next_unpop((chunk), &(rs), &(re), (end)); \
+-	     (rs) < (re);						    \
++	     (rs) < (re) && (rs) < (end);						    \
+ 	     (rs) = (re) + 1, pcpu_next_unpop((chunk), &(rs), &(re), (end)))
+ 
+ #define pcpu_for_each_pop_region(chunk, rs, re, start, end)		    \
+-- 
+2.7.4
+
