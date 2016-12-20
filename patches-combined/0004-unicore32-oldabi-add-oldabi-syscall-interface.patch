@@ -948,9 +948,9 @@ index 4ae51cf..78a6649 100644
 --- a/arch/unicore32/kernel/signal.c
 +++ b/arch/unicore32/kernel/signal.c
 @@ -23,9 +23,18 @@
-/*
- * For UniCore syscalls, we encode the syscall number into the instruction.
- */
+ /*
+  * For UniCore syscalls, we encode the syscall number into the instruction.
+  */
 +#ifdef CONFIG_UNICORE32_OLDABI
 +#define SWI_SYS_SIGRETURN	(0xff000000 | (__NR_SYSCALL_BASE)	\
 +					| (__NR_sigreturn))
